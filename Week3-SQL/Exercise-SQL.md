@@ -119,40 +119,81 @@ DNC SERVICES CORP / DEMOCRATIC NATIONAL COMMITTEE
 ```
 
 3. What week_start_date had the highest spend? (No need to insert query here, just type in the answer.)
-	```
-
-	```
+```
+2020-02-23
+```
 
 4. Using the `advertiser_weekly_spend` table, write a query that returns the sum of spend by week (using week_start_date) in usd for the month of August only. 
-	```
-	[YOUR QUERY HERE]
-	```
+```
+SELECT
+  week_start_date,
+  SUM(spend_usd) AS USD
+FROM
+  `bigquery-public-data.google_political_ads.advertiser_weekly_spend`
+WHERE
+  CAST(week_start_date AS STRING) LIKE '%2020-08%'
+GROUP BY
+  week_start_date
+```
 6.  How many ads did the 'TOM STEYER 2020' campaign run? (No need to insert query here, just type in the answer.)
-	```
-	[YOUR ANSWER HERE]
-	```
+```
+50
+```
 7. Write a query that has, in the US region only, the total spend in usd for each advertiser_name and how many ads they ran. (Hint, you're going to have to join tables for this one). 
-	```
-		[YOUR QUERY HERE]
-	```
+```
+
+```
 8. For each advertiser_name, find the average spend per ad. 
-	```
-	[YOUR QUERY HERE]
-	```
+```
+SELECT
+  advertiser_name,
+  AVG(spend_usd) AS AVERAGE_SPENT
+FROM
+  `bigquery-public-data.google_political_ads.advertiser_weekly_spend`
+GROUP BY
+  advertiser_name
+```
 10. Which advertiser_name had the lowest average spend per ad that was at least above 0. 
-	``` 
-	[YOUR QUERY HERE]
-	```
+``` 
+SELECT
+  advertiser_name,
+  AVG(spend_usd) AS AVERAGE_SPENT
+FROM
+  `bigquery-public-data.google_political_ads.advertiser_weekly_spend`
+WHERE
+  spend_usd > 0
+GROUP BY
+  advertiser_name
+ORDER BY
+  AVERAGE_SPENT ASC
+```
 ## For this next section, use the `new_york_citibike` datasets.
 
 1. Who went on more bike trips, Males or Females?
-	```
-	[YOUR QUERY HERE]
-	```
+```
+SELECT
+  gender,
+  COUNT(tripduration) AS BIKE_TRIPS
+FROM
+  `bigquery-public-data.new_york_citibike.citibike_trips`
+GROUP BY
+  gender
+```
 2. What was the average, shortest, and longest bike trip taken in minutes?
-	```
-	[YOUR QUERY HERE]
-	```
+```
+SELECT
+  MIN(SHORTEST_TRIPS) AS AVG_SHORT_TRIP,
+  MAX(LONGEST_TRIPS) AS AVG_LONG_TRIP
+FROM (
+  SELECT
+    bikeid,
+    AVG(tripduration) AS SHORTEST_TRIPS,
+    AVG(tripduration) AS LONGEST_TRIPS
+  FROM
+    `bigquery-public-data.new_york_citibike.citibike_trips`
+  GROUP BY
+    bikeid)
+```
 
 3. Write a query that, for every station_name, has the amount of trips that started there and the amount of trips that ended there. (Hint, use two temporary tables, one that counts the amount of starts, the other that counts the number of ends, and then join the two.) 
 	```
